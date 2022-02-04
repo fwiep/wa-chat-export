@@ -1,0 +1,16 @@
+{
+    "name": "fwiep/wa-chat-export",
+    "description": "Chat-export tool for unencrypted WhatsApp databases",
+    "require": {},
+    "authors": [
+        {
+            "name": "Frans-Willem Post",
+            "email": "fwiep@fwiep.nl"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "FWieP\\": "src/"
+        }
+    }
+}
