@@ -95,6 +95,30 @@ b8a38c2a67185f5d7f25;
                 );
             }
         }
+        // Add nameless contacts to the address book, to export their messages, too
+        $stmt = $db->prepare(
+            "SELECT
+                DISTINCT `key_remote_jid`
+            FROM
+                `messages`
+            WHERE
+                `status` != 6
+            ORDER BY
+                `key_remote_jid` ASC"
+        );
+        if ($res = $stmt->execute()) {
+            while ($row = $res->fetchArray(SQLITE3_ASSOC)) {
+                $rowJID = $row['key_remote_jid'];
+                
+                if (!array_key_exists($rowJID, $this->_addressBook)) {
+                    $this->addContactToAddressBook(
+                        (new Contact())
+                            ->setJID($rowJID)
+                            ->setDisplayName(self::_jidToNumber($rowJID))
+                    );
+                }
+            }
+        }
         // Loop through address book...
         foreach ($this->_addressBook as $jID => $contact) {
             $stmt = $db->prepare(
