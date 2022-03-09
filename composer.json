@@ -1,11 +1,14 @@
 {
     "name": "fwiep/wa-chat-export",
     "description": "Chat-export tool for unencrypted WhatsApp databases",
-    "require": {},
+    "type": "project",
+    "license": "GPL-3.0-or-later",
     "authors": [
         {
             "name": "Frans-Willem Post",
-            "email": "fwiep@fwiep.nl"
+            "email": "fwiep@fwiep.nl",
+            "homepage": "https://www.fwiep.nl/",
+            "role": "developer"
         }
     ],
     "autoload": {
