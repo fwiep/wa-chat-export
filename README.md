@@ -102,7 +102,7 @@ A possible single chat export might look like this:
 ## Afterthoughts
 
 Of course, the point of any end-to-end encrypted communication is to keep the
-sent and receivved messages secure and private. Working with unencrypted
+sent and received messages secure and private. Working with unencrypted
 databases and usage of an export-tool like this is not in line with that effort.
 
 Therefore, please look at this script as a tool for your convenience. It enables
