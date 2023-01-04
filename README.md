@@ -36,7 +36,7 @@ In your terminal or console session, call the export script:
 ```plain
 $ ./wa-chat-export.php --help
 
-WA Chat Export v0.1
+WA Chat Export v0.2
 Chat-export tool for unencrypted WhatsApp databases
 
 Usage: ./wa-chat-export.php OPTIONS
@@ -71,7 +71,7 @@ After a while, the script finishes and reports the number of exported chats.
 A possible single chat export might look like this:
 
 ```plain
-; WA Chat Export v0.1
+; WA Chat Export v0.2
 ; Creates a readable export of WhatsApp's chat history
 ;
 ; Export started: 2022-02-03 17:19:08 +01:00
@@ -121,4 +121,3 @@ them a visit and enjoy their work!
 [3]: https://git-scm.com/downloads
 [4]: https://twrp.me/
 [5]: https://github.com/B16f00t/whapa
-[6]: https://github.com/ElDavoo/WhatsApp-Crypt14-Decrypter

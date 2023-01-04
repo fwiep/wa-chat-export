@@ -98,13 +98,12 @@ b8a38c2a67185f5d7f25;
         // Add nameless contacts to the address book, to export their messages, too
         $stmt = $db->prepare(
             "SELECT
-                DISTINCT `key_remote_jid`
+                DISTINCT `user` || '@' || `server` AS `key_remote_jid`
             FROM
-                `messages`
-            WHERE
-                `status` != 6
+                `jid`
             ORDER BY
-                `key_remote_jid` ASC"
+                `user` ASC,
+                `server` ASC"
         );
         if ($res = $stmt->execute()) {
             while ($row = $res->fetchArray(SQLITE3_ASSOC)) {
@@ -123,21 +122,33 @@ b8a38c2a67185f5d7f25;
         foreach ($this->_addressBook as $jID => $contact) {
             $stmt = $db->prepare(
                 "SELECT
-                    `key_remote_jid`,
-                    `key_from_me`,
-                    `data`,
-                    `remote_resource`,
-                    `media_caption`,
-                    `forwarded`,
-                    `timestamp`
+                  `J`.`user` || '@' || `J`.`server` AS `key_remote_jid`,
+                  `M`.`from_me` AS `key_from_me`,
+                  `M`.`text_data` AS `data`,
+                  `JG`.`user` || '@' || `JG`.`server` AS `remote_resource`,
+                  `MM`.`media_caption`,
+                  CASE
+                    WHEN `MF`.`forward_score` > 0 THEN 1 ELSE 0
+                  END AS `forwarded`,
+                  `M`.`timestamp`
                 FROM
-                    `messages`
+                  `message` AS `M`
+                  JOIN `chat` AS `C`
+                    ON `M`.`chat_row_id` = `C`.`_id`
+                  JOIN `jid` AS `J`
+                    ON `C`.`jid_row_id` = `J`.`_id`
+                  LEFT JOIN `jid` AS `JG`
+                    ON `M`.`sender_jid_row_id` = `JG`.`_id`
+                  LEFT JOIN `message_forwarded` AS `MF`
+                    ON `M`.`_id` = `MF`.`message_row_id`
+                  LEFT JOIN `message_media` AS `MM`
+                    ON `M`.`_id` = `MM`.`message_row_id`
                 WHERE
-                    `key_remote_jid` == :jid
-                    AND `status` != 6
+                  `key_remote_jid` == :jid
+                  AND `M`.`status` != 6
                 ORDER BY
-                    `key_remote_jid` ASC,
-                    `timestamp` ASC"
+                  `key_remote_jid` ASC,
+                  `M`.`timestamp` ASC"
             );
             $stmt->bindValue(':jid', $jID, SQLITE3_TEXT);
             if ($res = $stmt->execute()) {
@@ -147,7 +158,7 @@ b8a38c2a67185f5d7f25;
                         ->setFromMe($row['key_from_me'] == 1)
                         ->setForwarded($row['forwarded'] == 1)
                         ->setInGroup(
-                            (strpos($row['key_remote_jid'], '-') !== false)
+                            (strpos($row['key_remote_jid'], '@g.us') !== false)
                         );
                     $remoteJid = $row['key_remote_jid'];
                     $groupJid = null;
@@ -194,7 +205,7 @@ b8a38c2a67185f5d7f25;
             if ($contact !== $this->_me) {
                 $o = $this->exportSingleChat($jID);
                 if (!empty($o)) {
-                    $ok =file_put_contents(
+                    $ok = file_put_contents(
                         $this->_outputDirecory.DIRECTORY_SEPARATOR.$jID.'.txt',
                         $o
                     );

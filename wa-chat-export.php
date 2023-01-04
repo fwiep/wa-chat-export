@@ -15,7 +15,7 @@ use FWieP\ChatExporter;
 use FWieP\RuntimeData as RD;
 require __DIR__.'/vendor/autoload.php';
 
-define('PROG_VERSION', '0.1');
+define('PROG_VERSION', '0.2');
 $validSQLite3mimes = ['application/x-sqlite3', 'application/vnd.sqlite3'];
 $wacDBfile = null;
 $msgDBfile = null;
